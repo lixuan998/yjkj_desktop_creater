@@ -1,0 +1,4 @@
+Name=desktop_creator
+Version=2.0
+Date=2022-10-29
+Author=lixuan
