@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(desktop_creator VERSION 0.1 LANGUAGES CXX)
+project(Desktop_Creator_Demo VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -21,47 +21,29 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/.v
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
+
+
+add_subdirectory(desktop_creator)
+
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-
-        desktop_creator.cpp
-        desktop_creator.h
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(desktop_creator
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-    )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET desktop_creator APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-else()
-    if(ANDROID)
-        add_library(desktop_creator SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(desktop_creator
-            ${PROJECT_SOURCES}
-        )
-    endif()
-endif()
+add_executable(Desktop_Creator_Demo ${PROJECT_SOURCES})
 
-target_link_libraries(desktop_creator PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_include_directories(Desktop_Creator_Demo PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/desktop_creator)
 
-set_target_properties(desktop_creator PROPERTIES
+target_link_libraries(Desktop_Creator_Demo PRIVATE Qt${QT_VERSION_MAJOR}::Widgets desktop_creator)
+
+set_target_properties(Desktop_Creator_Demo PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
 )
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(desktop_creator)
+    qt_finalize_executable(Desktop_Creator_Demo)
 endif()
